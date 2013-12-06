@@ -1,7 +1,7 @@
 connection-tester
 =================
 
-[![Build Status](https://travis-ci.org/skoranga/connection-tester.png)](https://travis-ci.org/skoranga/connection-tester)
+[![Build Status](https://travis-ci.org/skoranga/node-connection-tester.png)](https://travis-ci.org/skoranga/node-connection-tester)
 
 Sync/Blocking test to check if the connection can be established or host/port reachable for a given host and port. Useful for testing all the connection in your node application at server startup.
 

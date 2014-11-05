@@ -1,30 +1,72 @@
 'use strict';
 
-var util = require('util'),
+var net = require('net'),
+    util = require('util'),
     path = require('path'),
     shell = require('shelljs');
 
-exports = module.exports = {
-    test: function ConnectionTester(host, port) {
-        var output,
-            nodeBinary = process.execPath,
-            scriptPath = path.join(__dirname, "./scripts/connection-tester"),
-            cmd = util.format('"%s" "%s" %s %s', nodeBinary, scriptPath, host, port);
+function testAsync(host, port) {
+    var output,
+        nodeBinary = process.execPath,
+        scriptPath = path.join(__dirname, "./scripts/connection-tester"),
+        cmd = util.format('"%s" "%s" %s %s', nodeBinary, scriptPath, host, port);
 
-        var shellOut = shell.exec(cmd, {silent: true});
+    var shellOut = shell.exec(cmd, {silent: true});
 
-        output = {
-            success: false,
-            error: null
-        };
-        if (shellOut && shellOut.code === 0) {
-            if (shellOut.output === 'true') {
-                output.success = true;
-            } else {
-                output.error = shellOut.output;
-            }
+    output = {
+        success: false,
+        error: null
+    };
+    if (shellOut && shellOut.code === 0) {
+        if (shellOut.output === 'true') {
+            output.success = true;
+        } else {
+            output.error = shellOut.output;
         }
-        return output;
+    }
+    return output;
+}
+
+function testSync(host, port, callback) {
+    var socket = new net.Socket();
+
+    var output = {
+        success: false,
+        error: null
+    };
+
+    socket.connect(port, host);
+    socket.setTimeout(200);    //Setting 200ms as max acceptable timeout
+
+    //if able to establish the connection, returns `true`
+    socket.on('connect', function () {
+        socket.destroy();
+        output.success = true;
+        return callback(null, output);
+    });
+
+    //on connection error, returns error
+    socket.on('error', function (err) {
+        socket.destroy();
+        output.error = err && err.message || err;
+        return callback(err, output);
+    });
+
+    //on connection timeout, returns error
+    socket.on('timeout', function (err) {
+        socket.destroy();
+        output.error = err && err.message || err || 'socket TIMEOUT';
+        return callback(err, output);
+    });
+}
+
+exports = module.exports = {
+    test: function ConnectionTester(host, port, callback) {
+        if (callback) {
+            return testSync(host, port, callback);
+        } else {
+            return testAsync(host, port);
+        }
     }
 };
 

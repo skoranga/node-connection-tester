@@ -1,3 +1,7 @@
+#0.0.3 - 20141105
+
+- Support for Async version
+
 #0.0.1 - 20131205
 
 - Test connection provided host and port

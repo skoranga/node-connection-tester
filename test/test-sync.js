@@ -5,7 +5,7 @@ var assert = require('assert'),
     connectionTester = require('../index');
 
 
-describe('Connection tester', function () {
+describe('Connection tester - Sync', function () {
     var dummyServer,
         dummyServerPort = 99998;
 
@@ -54,7 +54,7 @@ describe('Connection tester', function () {
 
     it('should return false while connecting to 5678 port on www.paypal.com', function (next) {
         var connectOut = connectionTester.test('www.paypal.com', 5678);
-        assert.ok(connectOut.error !== 'Error: connect ECONNREFUSED');
+        assert.ok(connectOut.error === 'socket TIMEOUT');
         assert.ok(connectOut.success === false);
         next();
     });

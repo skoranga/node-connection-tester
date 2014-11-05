@@ -1,6 +1,6 @@
 {
     "name": "connection-tester",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description" : "test if the connection can be established with the given host and port",
     "main": "index.js",
     "author": "Sanjeev Koranga",
@@ -16,10 +16,10 @@
     "license": "MIT",
     "readmeFilename" : "README.md",
     "dependencies" : {
-      "shelljs" : "~0.2.6"
+      "shelljs" : "~0.3.0"
     },
     "devDependencies" : {
-      "mocha": "~1.15.0",
-      "jshint": "*"
+      "mocha": "^1",
+      "jshint": "^2"
     }
 }

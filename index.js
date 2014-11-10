@@ -5,6 +5,8 @@ var net = require('net'),
     path = require('path'),
     shell = require('shelljs');
 
+var SOCKET_TIMEOUT = 500;   //Setting 500ms as max acceptable timeout
+
 function testAsync(host, port) {
     var output,
         nodeBinary = process.execPath,
@@ -36,7 +38,7 @@ function testSync(host, port, callback) {
     };
 
     socket.connect(port, host);
-    socket.setTimeout(200);    //Setting 200ms as max acceptable timeout
+    socket.setTimeout(SOCKET_TIMEOUT);
 
     //if able to establish the connection, returns `true`
     socket.on('connect', function () {

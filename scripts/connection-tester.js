@@ -6,8 +6,10 @@ var socket = new net.Socket(),
     host = process.argv[2],
     port = process.argv[3];
 
+var SOCKET_TIMEOUT = 500;   //Setting 500ms as max acceptable timeout
+
 socket.connect(port, host);
-socket.setTimeout(200);    //Setting 200ms as max acceptable timeout
+socket.setTimeout(SOCKET_TIMEOUT);
 
 //if able to establish the connection, returns `true`
 socket.on('connect', function () {

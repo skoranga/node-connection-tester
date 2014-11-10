@@ -1,3 +1,7 @@
+#0.0.4 - 20141110
+
+- Increased socket timeout to 500ms
+
 #0.0.3 - 20141105
 
 - Support for Async version

@@ -5,7 +5,7 @@ var net = require('net'),
     path = require('path'),
     shell = require('shelljs');
 
-var SOCKET_TIMEOUT = 500;   //Setting 500ms as max acceptable timeout
+var SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
 
 function testAsync(host, port) {
     var output,

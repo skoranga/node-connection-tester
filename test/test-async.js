@@ -58,6 +58,7 @@ describe('Connection tester - Async', function () {
 
     it('should return false while connecting to 5678 port on www.paypal.com', function (next) {
         connectionTester.test('www.paypal.com', 5678, function (err, connectOut) {
+            console.log(connectOut);
             assert.ok(connectOut.error === 'socket TIMEOUT');
             assert.ok(connectOut.success === false);
             next();

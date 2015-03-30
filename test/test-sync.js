@@ -7,7 +7,7 @@ var assert = require('assert'),
 
 describe('Connection tester - Sync', function () {
     var dummyServer,
-        dummyServerPort = 99998;
+        dummyServerPort = 9998;
 
     before(function (next) {
         dummyServer = net.createServer(function (c) {
@@ -46,8 +46,8 @@ describe('Connection tester - Sync', function () {
     });
 
     it('should return false while connecting to dead port on localhost', function (next) {
-        var connectOut = connectionTester.test('localhost', 99999);
-        assert.ok(connectOut.error === 'Error: connect ECONNREFUSED');
+        var connectOut = connectionTester.test('localhost', 9999);
+        assert.ok(connectOut.error === 'connect ECONNREFUSED');
         assert.ok(connectOut.success === false);
         next();
     });

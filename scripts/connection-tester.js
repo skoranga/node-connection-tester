@@ -8,19 +8,20 @@ var socket = new net.Socket(),
 
 var SOCKET_TIMEOUT = 500;   //Setting 500ms as max acceptable timeout
 
-socket.connect(port, host);
 socket.setTimeout(SOCKET_TIMEOUT);
+socket.connect(port, host);
 
 //if able to establish the connection, returns `true`
 socket.on('connect', function () {
     socket.destroy();
-    process.stdout.write(true);
+    process.stdout.write('true');
 });
 
 //on connection error, returns error
 socket.on('error', function (err) {
+    var msg = err && err.message || 'connect ECONNREFUSED';
     socket.destroy();
-    process.stdout.write(err);
+    process.stdout.write(msg);
 });
 
 //on connection timeout, returns error

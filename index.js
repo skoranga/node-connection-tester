@@ -7,7 +7,7 @@ var net = require('net'),
 
 var SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
 
-function testAsync(host, port) {
+function testSync(host, port) {
     var output,
         nodeBinary = process.execPath,
         scriptPath = path.join(__dirname, "./scripts/connection-tester"),
@@ -29,7 +29,7 @@ function testAsync(host, port) {
     return output;
 }
 
-function testSync(host, port, callback) {
+function testAsync(host, port, callback) {
     var socket = new net.Socket();
 
     var output = {
@@ -65,9 +65,9 @@ function testSync(host, port, callback) {
 exports = module.exports = {
     test: function ConnectionTester(host, port, callback) {
         if (callback) {
-            return testSync(host, port, callback);
+            return testAsync(host, port, callback);
         } else {
-            return testAsync(host, port);
+            return testSync(host, port);
         }
     }
 };

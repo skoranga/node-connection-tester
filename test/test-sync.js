@@ -52,8 +52,8 @@ describe('Connection tester - Sync', function () {
         next();
     });
 
-    it('should return false while connecting to 5678 port on www.paypal.com', function (next) {
-        var connectOut = connectionTester.test('www.paypal.com', 5678);
+    it('should return false while connecting to 5678 port on www.example.com', function (next) {
+        var connectOut = connectionTester.test('www.example.com', 5678);
         assert.ok(connectOut.error === 'socket TIMEOUT');
         assert.ok(connectOut.success === false);
         next();

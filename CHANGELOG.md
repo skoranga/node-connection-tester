@@ -1,3 +1,6 @@
+#0.0.4 - 20151006
+ - update dependencies
+
 #0.0.4 - 20141110
 
 - Increased socket timeout to 500ms

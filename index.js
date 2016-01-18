@@ -7,11 +7,11 @@ var net = require('net'),
 
 var SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
 
-function testSync(host, port) {
+function testSync(host, port, connectTimeout) {
     var output,
         nodeBinary = process.execPath,
         scriptPath = path.join(__dirname, "./scripts/connection-tester"),
-        cmd = util.format('"%s" "%s" %s %s', nodeBinary, scriptPath, host, port);
+        cmd = util.format('"%s" "%s" %s %s %s', nodeBinary, scriptPath, host, port, connectTimeout);
 
     var shellOut = shell.exec(cmd, {silent: true});
 
@@ -29,7 +29,7 @@ function testSync(host, port) {
     return output;
 }
 
-function testAsync(host, port, callback) {
+function testAsync(host, port, connectTimeout, callback) {
     var socket = new net.Socket();
 
     var output = {
@@ -38,7 +38,7 @@ function testAsync(host, port, callback) {
     };
 
     socket.connect(port, host);
-    socket.setTimeout(SOCKET_TIMEOUT);
+    socket.setTimeout(connectTimeout);
 
     //if able to establish the connection, returns `true`
     socket.on('connect', function () {
@@ -63,12 +63,22 @@ function testAsync(host, port, callback) {
 }
 
 exports = module.exports = {
-    test: function ConnectionTester(host, port, callback) {
-        if (callback) {
-            return testAsync(host, port, callback);
-        } else {
-            return testSync(host, port);
+    test: function ConnectionTester(host, port, callbackOrConnectTimeout, callback) {
+
+        // for backward compatibility
+        if (typeof callbackOrConnectTimeout === 'function'){
+            console.log('deprecated: Please migrate to the new interface ConnectionTester\(host, port, timeout, callback\)');
+            return testAsync(host, port, SOCKET_TIMEOUT, callbackOrConnectTimeout);
+        }
+        if (typeof callbackOrConnectTimeout === 'number'){
+            if (callback) {
+                return testAsync(host, port, callbackOrConnectTimeout, callback);
+            } else {
+                return testSync(host, port, callbackOrConnectTimeout);
+            }
+        }
+        if (callbackOrConnectTimeout === undefined){            
+            return testSync(host, port, SOCKET_TIMEOUT);            
         }
     }
 };
-

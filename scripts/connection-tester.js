@@ -4,11 +4,10 @@ var net = require('net');
 
 var socket = new net.Socket(),
     host = process.argv[2],
-    port = process.argv[3];
+    port = process.argv[3],
+    connectTimeout = process.argv[4];
 
-var SOCKET_TIMEOUT = 500;   //Setting 500ms as max acceptable timeout
-
-socket.setTimeout(SOCKET_TIMEOUT);
+socket.setTimeout(connectTimeout);
 socket.connect(port, host);
 
 //if able to establish the connection, returns `true`

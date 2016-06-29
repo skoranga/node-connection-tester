@@ -19,12 +19,18 @@ function testSync(host, port, connectTimeout) {
         success: false,
         error: null
     };
-    if (shellOut && shellOut.code === 0) {
-        if (shellOut.output === 'true') {
-            output.success = true;
+    if (shellOut) {
+        if (shellOut.code === 0) {
+            if (shellOut.output === 'true') {
+                output.success = true;
+            } else {
+                output.error = shellOut.output;
+            }
         } else {
             output.error = shellOut.output;
         }
+    } else {
+        output.error = "No output from connection test";
     }
     return output;
 }

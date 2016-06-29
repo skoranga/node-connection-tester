@@ -4,8 +4,8 @@ var net = require('net');
 
 var socket = new net.Socket(),
     host = process.argv[2],
-    port = process.argv[3],
-    connectTimeout = process.argv[4];
+    port = parseInt(process.argv[3], 10),
+    connectTimeout = parseInt(process.argv[4], 10);
 
 socket.setTimeout(connectTimeout);
 socket.connect(port, host);

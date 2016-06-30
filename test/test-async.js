@@ -50,7 +50,7 @@ describe('Connection tester - Async', function () {
 
     it('should return false while connecting to dead port on localhost', function (next) {
         connectionTester.test('localhost', 9999, function (err, connectOut) {
-            assert.ok(connectOut.error === 'connect ECONNREFUSED');
+            assert.ok(connectOut.error.indexOf('connect ECONNREFUSED') !== -1);
             assert.ok(connectOut.success === false);
             next();
         });
@@ -66,4 +66,3 @@ describe('Connection tester - Async', function () {
     });
 
 });
-

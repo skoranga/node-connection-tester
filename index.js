@@ -21,13 +21,13 @@ function testSync(host, port, connectTimeout) {
     };
     if (shellOut) {
         if (shellOut.code === 0) {
-            if (shellOut.output === 'true') {
+            if (shellOut.stdout === 'true') {
                 output.success = true;
             } else {
-                output.error = shellOut.output;
+                output.error = shellOut.stdout;
             }
         } else {
-            output.error = shellOut.output;
+            output.error = shellOut.stdout;
         }
     } else {
         output.error = "No output from connection test";
@@ -83,8 +83,8 @@ exports = module.exports = {
                 return testSync(host, port, callbackOrConnectTimeout);
             }
         }
-        if (callbackOrConnectTimeout === undefined){            
-            return testSync(host, port, SOCKET_TIMEOUT);            
+        if (callbackOrConnectTimeout === undefined){
+            return testSync(host, port, SOCKET_TIMEOUT);
         }
     }
 };

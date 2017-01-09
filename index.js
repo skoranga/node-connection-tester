@@ -69,6 +69,16 @@ function testAsync(host, port, connectTimeout, callback) {
 }
 
 exports = module.exports = {
+	
+    timeout: function (socketTimeout) {
+
+        if (!!socketTimeout) {
+            SOCKET_TIMEOUT = socketTimeout; 
+        }
+
+        return SOCKET_TIMEOUT;
+
+    },
     test: function ConnectionTester(host, port, callbackOrConnectTimeout, callback) {
 
         // for backward compatibility

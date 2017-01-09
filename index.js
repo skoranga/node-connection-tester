@@ -72,8 +72,11 @@ exports = module.exports = {
 	
     timeout: function (socketTimeout) {
 
-        if (!socketTimeout) return SOCKET_TIMEOUT;
-        SOCKET_TIMEOUT = socketTimeout;
+        if (!!socketTimeout) {
+            SOCKET_TIMEOUT = socketTimeout; 
+        }
+
+        return SOCKET_TIMEOUT;
 
     },
     test: function ConnectionTester(host, port, callbackOrConnectTimeout, callback) {

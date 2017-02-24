@@ -11,21 +11,32 @@ Test to check if the connection can be established or host/port reachable for a 
 #### Async version
 
 ```javascript
-var connectionTester = require('connection-tester');
+const connectionTester = require('connection-tester');
 
-connectionTester.test('www.yahoo.com', 80, function (err, output) {
-    console.log(output);
-});
-connectionTester.test('api.paypal.com', 443, function (err, output) {
-    console.log(output);
-});
+connectionTester.test(
+    'www.yahoo.com',  // host
+    80,               // port
+    1000,             // connection timeout
+    (err, output) => {
+        console.log(output);
+    }
+);
+
+connectionTester.test(
+    'api.paypal.com', // host
+    443,              // port
+    1000,             // connection timeout
+    (err, output) => {
+        console.log(output);
+    }
+);
 ```
 
 #### Sync version
 
 ```javascript
-var connectionTester = require('connection-tester');
+const connectionTester = require('connection-tester');
 
-console.log(connectionTester.test('www.yahoo.com', 80));
-console.log(connectionTester.test('api.paypal.com', 443));
+console.log(connectionTester.test('www.yahoo.com', 80, 1000));
+console.log(connectionTester.test('api.paypal.com', 443, 1000));
 ```

@@ -11,21 +11,8 @@
     "browser": false,
     // Whether the Node.js environment globals should be predefined.
     "node": true,
-    // Whether the Rhino environment globals should be predefined.
-    "rhino": false,
-    // Whether CouchDB globals should be predefined.
-    "couch": false,
-    // Whether the Windows Scripting Host environment globals should be predefined.
-    "wsh": false,
-
-    // Whether jQuery globals should be predefined.
-    "jquery": false,
-    // Whether Prototype and Scriptaculous globals should be predefined.
-    "prototypejs": false,
-    // Whether MooTools globals should be predefined.
-    "mootools": false,
-    // Whether Dojo Toolkit globals should be predefined.
-    "dojo": false,
+    // to use ES6
+    "esversion": 6,
 
     // Custom predefined globals.
     "predef": [

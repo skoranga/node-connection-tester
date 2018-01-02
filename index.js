@@ -1,25 +1,24 @@
 'use strict';
 
-var net = require('net'),
-    util = require('util'),
-    path = require('path'),
-    shell = require('child_process');
+const net = require('net');
+const util = require('util');
+const path = require('path');
+const shell = require('child_process');
 
-var SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
+let SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
 
 function testSync(host, port, connectTimeout) {
-    var output,
-        nodeBinary = process.execPath,
-        scriptPath = path.join(__dirname, "./scripts/connection-tester"),
-        cmd = util.format('"%s" "%s" %s %s %s', nodeBinary, scriptPath, host, port, connectTimeout);
+    const nodeBinary = process.execPath;
+    const scriptPath = path.join(__dirname, "./scripts/connection-tester");
+    const cmd = util.format('"%s" "%s" %s %s %s', nodeBinary, scriptPath, host, port, connectTimeout);
 
-    var shellOut = shell.execSync(cmd).toString();
+    const shellOut = shell.execSync(cmd).toString();
 
-    output = {
+    const output = {
         success: false,
         error: null
     };
-    console.log('shellOut',shellOut);
+
     if (shellOut) {
       if (shellOut.match(/true/)) {
         output.success = true;
@@ -33,9 +32,9 @@ function testSync(host, port, connectTimeout) {
 }
 
 function testAsync(host, port, connectTimeout, callback) {
-    var socket = new net.Socket();
+    const socket = new net.Socket();
 
-    var output = {
+    const output = {
         success: false,
         error: null
     };
@@ -65,7 +64,7 @@ function testAsync(host, port, connectTimeout, callback) {
     });
 }
 
-exports = module.exports = {
+module.exports = {
 
     timeout: function (socketTimeout) {
 
@@ -79,18 +78,18 @@ exports = module.exports = {
     test: function ConnectionTester(host, port, callbackOrConnectTimeout, callback) {
 
         // for backward compatibility
-        if (typeof callbackOrConnectTimeout === 'function'){
+        if (typeof callbackOrConnectTimeout === 'function') {
             console.log('deprecated: Please migrate to the new interface ConnectionTester\(host, port, timeout, callback\)');
             return testAsync(host, port, SOCKET_TIMEOUT, callbackOrConnectTimeout);
         }
-        if (typeof callbackOrConnectTimeout === 'number'){
+        if (typeof callbackOrConnectTimeout === 'number') {
             if (callback) {
                 return testAsync(host, port, callbackOrConnectTimeout, callback);
             } else {
                 return testSync(host, port, callbackOrConnectTimeout);
             }
         }
-        if (callbackOrConnectTimeout === undefined){
+        if (callbackOrConnectTimeout === undefined) {
             return testSync(host, port, SOCKET_TIMEOUT);
         }
     }

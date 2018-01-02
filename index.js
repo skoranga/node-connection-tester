@@ -3,7 +3,7 @@
 var net = require('net'),
     util = require('util'),
     path = require('path'),
-    shell = require('shelljs');
+    shell = require('child_process');
 
 var SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
 
@@ -13,22 +13,19 @@ function testSync(host, port, connectTimeout) {
         scriptPath = path.join(__dirname, "./scripts/connection-tester"),
         cmd = util.format('"%s" "%s" %s %s %s', nodeBinary, scriptPath, host, port, connectTimeout);
 
-    var shellOut = shell.exec(cmd, {silent: true});
+    var shellOut = shell.execSync(cmd).toString();
 
     output = {
         success: false,
         error: null
     };
+    console.log('shellOut',shellOut);
     if (shellOut) {
-        if (shellOut.code === 0) {
-            if (shellOut.stdout === 'true') {
-                output.success = true;
-            } else {
-                output.error = shellOut.stdout;
-            }
-        } else {
-            output.error = shellOut.stdout;
-        }
+      if (shellOut.match(/true/)) {
+        output.success = true;
+      } else {
+        output.error = shellOut;
+      }
     } else {
         output.error = "No output from connection test";
     }
@@ -69,11 +66,11 @@ function testAsync(host, port, connectTimeout, callback) {
 }
 
 exports = module.exports = {
-	
+
     timeout: function (socketTimeout) {
 
         if (!!socketTimeout) {
-            SOCKET_TIMEOUT = socketTimeout; 
+            SOCKET_TIMEOUT = socketTimeout;
         }
 
         return SOCKET_TIMEOUT;

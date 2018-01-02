@@ -1,3 +1,7 @@
+# Unreleased
+
+ - Remove shelljs
+
 #0.0.4 - 20151006
  - update dependencies
 

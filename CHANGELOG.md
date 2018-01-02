@@ -1,6 +1,7 @@
-# Unreleased
+# 0.2.0
 
- - Remove shelljs
+ - Remove shelljs & switch to child_process `execSync` instead ( drops support of node@v0.10)
+ - Drop support for node 0.10 & 0.12
 
 #0.0.4 - 20151006
  - update dependencies

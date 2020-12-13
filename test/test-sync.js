@@ -2,6 +2,7 @@
 
 var assert = require('assert'),
     net = require('net'),
+    dnsSync = require('dns-sync'),
     connectionTester = require('../index');
 
 
@@ -35,6 +36,10 @@ describe('Connection tester - Sync', function () {
         var connectOut = connectionTester.test('www.google.com', 443);
         assert.ok(connectOut.error === null);
         assert.ok(connectOut.success === true);
+
+        connectOut = connectionTester.test(dnsSync.resolve('www.google.com'), 443);
+        assert.ok(connectOut.error === null);
+        assert.ok(connectOut.success === true);
         next();
     });
 
@@ -56,6 +61,20 @@ describe('Connection tester - Sync', function () {
         var connectOut = connectionTester.test('www.example.com', 5678);
         assert.ok(connectOut.error === 'socket TIMEOUT');
         assert.ok(connectOut.success === false);
+        next();
+    });
+
+    it('should return false for all these invalid cases', function (next) {
+        var errorMsg = 'invalid host/port';
+        assert.ok(connectionTester.test('helloworld.', 'hello').error === errorMsg);
+        assert.ok(connectionTester.test('www.example.com', 'hello').error === errorMsg);
+        assert.ok(connectionTester.test('www.example.com', -1).error === errorMsg);
+        assert.ok(connectionTester.test('www.example.com', 65536).error === errorMsg);
+        assert.ok(connectionTester.test('www.example.com', 9999999).error === errorMsg);
+        assert.ok(connectionTester.test('www.example.com', '& touch 222').error === errorMsg);
+        assert.ok(connectionTester.test('& touch 111', '& touch 222').error === errorMsg);
+        assert.ok(connectionTester.test('& touch 111', 80).error === errorMsg);
+        assert.ok(connectionTester.test('www.test', 80).error);
         next();
     });
 

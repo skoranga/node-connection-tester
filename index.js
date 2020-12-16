@@ -7,6 +7,13 @@ const shell = require('child_process');
 
 let SOCKET_TIMEOUT = 1000;   //Setting 1s as max acceptable timeout
 
+//source - http://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
+var ValidHostnameRegex = new RegExp("^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$");
+
+function isValidHostNameOrIP(host) {
+    return net.isIP(host) || ValidHostnameRegex.test(host);
+}
+
 function testSync(host, port, connectTimeout) {
     const nodeBinary = process.execPath;
     const scriptPath = path.join(__dirname, "./scripts/connection-tester");
@@ -75,22 +82,48 @@ module.exports = {
         return SOCKET_TIMEOUT;
 
     },
-    test: function ConnectionTester(host, port, callbackOrConnectTimeout, callback) {
+    test: function ConnectionTester(host, port, connectTimeout, callback) {
 
-        // for backward compatibility
-        if (typeof callbackOrConnectTimeout === 'function') {
-            console.log('deprecated: Please migrate to the new interface ConnectionTester\(host, port, timeout, callback\)');
-            return testAsync(host, port, SOCKET_TIMEOUT, callbackOrConnectTimeout);
+        // validate host
+        if (!isValidHostNameOrIP(host)) {
+            console.error('[connection-tester] invalid host: ', host);
+            host = undefined;
         }
-        if (typeof callbackOrConnectTimeout === 'number') {
-            if (callback) {
-                return testAsync(host, port, callbackOrConnectTimeout, callback);
-            } else {
-                return testSync(host, port, callbackOrConnectTimeout);
+        // validate port
+        var originalPort = port;
+        port = +port;
+        if (!port || port < 0 || port > 65535) {
+            console.error('[connection-tester] invalid port: ', originalPort);
+            port = undefined;
+        }
+
+        if (typeof connectTimeout === 'function') {
+            console.error('deprecated: Please migrate to the new interface ConnectionTester\(host, port, timeout, callback\)');
+            callback = connectTimeout;
+            connectTimeout = SOCKET_TIMEOUT;
+        }
+        if (connectTimeout === undefined) {
+            connectTimeout = SOCKET_TIMEOUT;
+        }
+
+        if (typeof connectTimeout === 'number') {
+            if (!port || !host) {
+                var output = {
+                    success: false,
+                    error: 'invalid host/port'
+                };
+
+                if (callback) {
+                    return callback(null, output);
+                } else {
+                    return output;
+                }
             }
-        }
-        if (callbackOrConnectTimeout === undefined) {
-            return testSync(host, port, SOCKET_TIMEOUT);
+            if (callback) {
+                return testAsync(host, port, connectTimeout, callback);
+            } else {
+                return testSync(host, port, connectTimeout);
+            }
         }
     }
 };
